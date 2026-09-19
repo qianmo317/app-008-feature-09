@@ -9,6 +9,12 @@ export function todayStr(): string {
   return new Date().toISOString().split('T')[0];
 }
 
+export function formatDateTime(ts: number): string {
+  const d = new Date(ts);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getMonth() + 1}/${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export function generateBoxCode(task: MoveTask, roomTo: string): string {
   const prefix = roomTo.charAt(0).toUpperCase();
   const sameRoomBoxes = task.boxes.filter((b) => b.roomTo === roomTo);
