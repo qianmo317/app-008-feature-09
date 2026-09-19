@@ -12,6 +12,8 @@ export type Box = {
   weightKg?: number;
   status: BoxStatus;
   note?: string;
+  printCount?: number; // 标签已打印次数（首次打印为 1）
+  lastPrintedAt?: number; // 最近一次打印时间
   createdAt: number;
   updatedAt: number;
 };

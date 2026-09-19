@@ -84,3 +84,24 @@ export async function deleteBox(taskId: string, boxId: string): Promise<void> {
   task.boxes = task.boxes.filter((b) => b.id !== boxId);
   await saveTask(task);
 }
+
+/**
+ * 记录一次标签打印：以数据库里的最新箱子列表为准，
+ * 已经被删掉的箱子不会被计入，返回实际记账成功的箱子。
+ */
+export async function markBoxesPrinted(taskId: string, boxIds: string[]): Promise<Box[]> {
+  const task = await getTask(taskId);
+  if (!task) throw new Error('Task not found');
+  const idSet = new Set(boxIds);
+  const now = Date.now();
+  const printed: Box[] = [];
+  for (const box of task.boxes) {
+    if (idSet.has(box.id)) {
+      box.printCount = (box.printCount ?? 0) + 1;
+      box.lastPrintedAt = now;
+      printed.push(box);
+    }
+  }
+  await saveTask(task);
+  return printed;
+}
